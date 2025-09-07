@@ -196,6 +196,15 @@ def get_llm_config(api_type: str = None, timeout: int = 240, temperature: float 
     api_config["temperature"] = temperature
     api_config["top_p"] = top_p
     
+    # Verify config
+    model = api_config.get('config_list', [{}])[0].get('model', 'N/A')
+    if api_type in ['basic', 'openai']:
+        if model in ['gpt-5']:
+            api_config.pop("top_p") # gpt-5 does not support top_p
+            if api_config["temperature"] != 1.0:
+                warnings.warn(f"⚠️  Model '{model}' only support temperature=1.0. Resetting...")
+                api_config["temperature"] = 1.0
+                
     return api_config
 
 def load_envs_func():
