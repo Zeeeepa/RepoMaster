@@ -426,6 +426,62 @@ class UIStyleManager:
         footer {visibility: hidden;}
         header {visibility: hidden;}
         
+        /* Hide settings menu completely */
+        .stDeployButton {display: none !important;}
+        .stApp > div[data-testid="stToolbar"] {display: none !important;}
+        .stApp > div[data-testid="stDecoration"] {display: none !important;}
+        .stApp > div[data-testid="stHeader"] {display: none !important;}
+        
+        /* Hide sidebar collapse button */
+        .stSidebarCollapseButton {display: none !important;}
+        button[data-testid="stSidebarCollapseButton"] {display: none !important;}
+        [data-testid="stSidebarCollapseButton"] {display: none !important;}
+        .stApp button[aria-label*="collapse"] {display: none !important;}
+        .stApp button[aria-label*="Collapse"] {display: none !important;}
+        .stApp button[title*="collapse"] {display: none !important;}
+        .stApp button[title*="Collapse"] {display: none !important;}
+        
+        /* Additional selectors for sidebar collapse button */
+        .stApp > div:first-child button {display: none !important;}
+        .stApp > div:first-child > div:first-child button {display: none !important;}
+        .stApp [data-testid*="sidebar"] button {display: none !important;}
+        .stApp [data-testid*="Sidebar"] button {display: none !important;}
+        
+        /* JavaScript to hide sidebar collapse button */
+        </style>
+        <script>
+        // Hide sidebar collapse button
+        function hideSidebarCollapseButton() {
+            const selectors = [
+                '.stSidebarCollapseButton',
+                '[data-testid="stSidebarCollapseButton"]',
+                'button[aria-label*="collapse"]',
+                'button[aria-label*="Collapse"]',
+                'button[title*="collapse"]',
+                'button[title*="Collapse"]',
+                '.stApp > div:first-child button',
+                '.stApp [data-testid*="sidebar"] button'
+            ];
+            
+            selectors.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => {
+                    if (el && el.style) {
+                        el.style.display = 'none !important';
+                        el.style.visibility = 'hidden !important';
+                    }
+                });
+            });
+        }
+        
+        // Run immediately and on DOM changes
+        hideSidebarCollapseButton();
+        document.addEventListener('DOMContentLoaded', hideSidebarCollapseButton);
+        const observer = new MutationObserver(hideSidebarCollapseButton);
+        observer.observe(document.body, { childList: true, subtree: true });
+        </script>
+        <style>
+        
         /* Main container styles */
         .main-container {
             max-width: 1400px;
@@ -443,6 +499,26 @@ class UIStyleManager:
             position: sticky;
             top: 0;
             z-index: 1000;
+        }
+        
+        /* Sidebar toggle button styles */
+        .sidebar-toggle-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 0.5rem !important;
+            padding: 0.5rem 1rem !important;
+            font-weight: 600 !important;
+            font-size: 1.2rem !important;
+            transition: all 0.2s ease !important;
+            box-shadow: var(--shadow) !important;
+            min-height: 40px !important;
+        }
+        
+        .sidebar-toggle-button:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: var(--shadow-lg) !important;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color)) !important;
         }
         
         .nav-content {
@@ -942,8 +1018,10 @@ class UIComponentRenderer:
         <div class="top-navigation">
             <div class="nav-content">
                 <div class="logo">✨ {title}</div>
-                <div style="color: var(--text-secondary);">
-                    Welcome, {user_name}
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="color: var(--text-secondary);">
+                        Welcome, {user_name}
+                    </div>
                 </div>
             </div>
         </div>
