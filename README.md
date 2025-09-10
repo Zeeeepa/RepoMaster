@@ -220,50 +220,6 @@ https://github.com/user-attachments/assets/a21b2f2e-a31c-4afd-953d-d143beef781a
 
 - **🐛 Bug Reports**: Help us identify and fix issues by [reporting them](https://github.com/QuantaAlpha/RepoMaster/issues).
 - **💡 Feature Requests**: Have a great idea? [Suggest a new feature](https://github.com/QuantaAlpha/RepoMaster/discussions).
-- **📖 Documentation**: Improve clarity and examples by contributing to our [documentation](docs/).
-- **💻 Code Contributions**: Ready to jump in? See our [development setup](#development-setup) to get started.
-
-### 🛠️ Development Setup
-
-<details open>
-<summary><strong>Quick Developer Environment Setup</strong></summary>
-
-```bash
-# Fork and clone the repository
-git clone https://github.com/your-username/RepoMaster.git
-cd RepoMaster
-
-# Install development dependencies
-pip install -e ".[dev]"
-
-# Set up pre-commit hooks for code quality
-pre-commit install
-
-# Run tests to ensure everything works
-pytest tests/
-
-# Start developing! 🚀
-```
-
-</details>
-
-> 📋 **New to open source?** Check our [Contributing Guidelines](CONTRIBUTING.md) for detailed instructions and best practices.
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 📞 Support
-
-- 📧 **Email**: quantaalpha.ai@gmail.com
-- 🐛 **Issues**: [GitHub Issues](https://github.com/QuantaAlpha/RepoMaster/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/QuantaAlpha/RepoMaster/discussions)
-- 📖 **Documentation**: [Full Documentation](docs/)
-
 ---
 
 ## 🙏 Acknowledgments
@@ -290,7 +246,8 @@ Special thanks to:
 
 📢 We welcome students and researchers interested in these directions to join us!  
 
-🔗 Team Homepage: [QuantaAlpha](https://quantaalpha.github.io/)
+🔗 **Team Homepage**: [QuantaAlpha](https://quantaalpha.github.io/)
+📧 **Email**: quantaalpha.ai@gmail.com
 
 ---
 
@@ -308,6 +265,11 @@ If you find RepoMaster useful in your research, please cite our work:
   url={https://arxiv.org/abs/2505.21577}
 }
 ```
+
+---
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=QuantaAlpha/RepoMaster&type=Date)](https://www.star-history.com/#QuantaAlpha/RepoMaster&Date)
 
 ---
 
