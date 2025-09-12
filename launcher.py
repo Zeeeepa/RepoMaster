@@ -73,7 +73,7 @@ def setup_environment():
     
     # Load environment variables if .env exists
     if env_file.exists():
-        load_dotenv(env_file)
+        load_dotenv(env_file, override=True)
         
         # Check for required API keys
         missing_keys = []
