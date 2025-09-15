@@ -134,7 +134,7 @@ class FilePreviewGenerator:
             html += '<tr>'
             for col in preview_df.columns:
                 col_name = col[:6] + '..' if len(str(col)) > 6 else str(col)
-                html += f'<th style="background: #f1f5f9; padding: 0.1rem; border: 1px solid #e2e8f0; font-size: 0.45rem; line-height: 1;">{col_name}</th>'
+                html += f'<th style="background: var(--background-secondary, #f1f5f9); padding: 0.1rem; border: 1px solid var(--border-color, #e2e8f0); font-size: 0.45rem; line-height: 1;">{col_name}</th>'
             html += '</tr>'
             
             # Data rows - limit display rows to fit container
@@ -150,7 +150,7 @@ class FilePreviewGenerator:
             
             # Show data statistics - simplified version
             if len(df) > display_rows or cols_truncated > 0:
-                html += f'<div style="text-align: center; margin-top: 0.2rem; font-size: 0.35rem; color: #64748b; line-height: 1;">'
+                html += f'<div style="text-align: center; margin-top: 0.2rem; font-size: 0.35rem; color: var(--text-muted, #64748b); line-height: 1;">'
                 html += f'{len(df)}×{len(df.columns)}'
                 html += '</div>'
             
@@ -173,14 +173,14 @@ class FilePreviewGenerator:
             
             # Generate CSV-like preview - optimized for container
             html = '<div style="width: 100%; height: 100%; font-size: 0.6rem; padding: 0.25rem; overflow: hidden; display: flex; flex-direction: column; justify-content: center;">'
-            html += '<div style="background: #10b981; color: white; padding: 0.1rem; text-align: center; font-size: 0.4rem; margin-bottom: 0.2rem; border-radius: 0.2rem;">Excel</div>'
+            html += '<div style="background: var(--success-color, #10b981); color: white; padding: 0.1rem; text-align: center; font-size: 0.4rem; margin-bottom: 0.2rem; border-radius: 0.2rem;">Excel</div>'
             html += '<table style="width: 100%; border-collapse: collapse; font-size: 0.5rem;">'
             
             # Table header
             html += '<tr>'
             for col in df.columns:
                 col_name = col[:6] + '..' if len(str(col)) > 6 else str(col)
-                html += f'<th style="background: #f1f5f9; padding: 0.1rem; border: 1px solid #e2e8f0; font-size: 0.45rem; line-height: 1;">{col_name}</th>'
+                html += f'<th style="background: var(--background-secondary, #f1f5f9); padding: 0.1rem; border: 1px solid var(--border-color, #e2e8f0); font-size: 0.45rem; line-height: 1;">{col_name}</th>'
             html += '</tr>'
             
             # Display rows - limit display rows to fit container
@@ -205,7 +205,7 @@ class FilePreviewGenerator:
             content = uploaded_file.read().decode('utf-8')
             data = json.loads(content)
             
-            html = '<div style="width: 100%; height: 100%; font-size: 0.55rem; padding: 0.25rem; font-family: monospace; background: #f8fafc; border-radius: 0.25rem; overflow: hidden; display: flex; align-items: center; justify-content: center;">'
+            html = '<div style="width: 100%; height: 100%; font-size: 0.55rem; padding: 0.25rem; font-family: monospace; background: var(--background-secondary, #f8fafc); border-radius: 0.25rem; overflow: hidden; display: flex; align-items: center; justify-content: center;">'
             
             # Recursively display JSON structure (simplified, more compact)
             def format_json_preview(obj, level=0, max_level=1):
@@ -218,9 +218,9 @@ class FilePreviewGenerator:
                     for i, (k, v) in enumerate(items):
                         if i > 0:
                             result += ","
-                        result += f'<br>{"&nbsp;" * (level * 1)}<span style="color: #dc2626;">"{k[:6]}"</span>: {format_json_preview(v, level + 1, max_level)}'
+                        result += f'<br>{"&nbsp;" * (level * 1)}<span style="color: var(--error-color, #dc2626);">"{k[:6]}"</span>: {format_json_preview(v, level + 1, max_level)}'
                     if len(obj) > 2:
-                        result += f'<br>{"&nbsp;" * (level * 1)}<span style="color: #64748b;">...{len(obj) - 2}</span>'
+                        result += f'<br>{"&nbsp;" * (level * 1)}<span style="color: var(--text-muted, #64748b);">...{len(obj) - 2}</span>'
                     result += f'<br>{"&nbsp;" * ((level - 1) * 1 if level > 0 else 0)}}}'
                     return result
                 elif isinstance(obj, list):
@@ -233,15 +233,15 @@ class FilePreviewGenerator:
                             result += ","
                         result += f'<br>{"&nbsp;" * (level * 1)}{format_json_preview(item, level + 1, max_level)}'
                     if len(obj) > 1:
-                        result += f'<br>{"&nbsp;" * (level * 1)}<span style="color: #64748b;">...{len(obj) - 1}</span>'
+                        result += f'<br>{"&nbsp;" * (level * 1)}<span style="color: var(--text-muted, #64748b);">...{len(obj) - 1}</span>'
                     result += f'<br>{"&nbsp;" * ((level - 1) * 1 if level > 0 else 0)}]'
                     return result
                 elif isinstance(obj, str):
                     if len(obj) > 6:
-                        return f'<span style="color: #059669;">"{obj[:6]}..."</span>'
-                    return f'<span style="color: #059669;">"{obj}"</span>'
+                        return f'<span style="color: var(--success-color, #059669);">"{obj[:6]}..."</span>'
+                    return f'<span style="color: var(--success-color, #059669);">"{obj}"</span>'
                 else:
-                    return f'<span style="color: #0369a1;">{str(obj)[:6]}</span>'
+                    return f'<span style="color: var(--primary-color, #0369a1);">{str(obj)[:6]}</span>'
             
             html += format_json_preview(data)
             html += '</div>'
@@ -396,7 +396,7 @@ class UIStyleManager:
         /* Import modern fonts */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
-        /* CSS variable definitions */
+        /* CSS variable definitions for light mode */
         :root {
             --primary-color: #6366f1;
             --primary-dark: #4f46e5;
@@ -413,6 +413,37 @@ class UIStyleManager:
             --error-color: #ef4444;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            
+            /* RGB values for transparent backgrounds */
+            --background-primary-rgb: 255, 255, 255;
+            --background-secondary-rgb: 241, 245, 249;
+            --primary-color-rgb: 99, 102, 241;
+        }
+        
+        /* CSS variable definitions for dark mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: #818cf8;
+                --primary-dark: #6366f1;
+                --secondary-color: #34d399;
+                --background-primary: #0f172a;
+                --background-secondary: #1e293b;
+                --background-tertiary: #334155;
+                --text-primary: #f1f5f9;
+                --text-secondary: #cbd5e1;
+                --text-muted: #94a3b8;
+                --border-color: #475569;
+                --success-color: #34d399;
+                --warning-color: #fbbf24;
+                --error-color: #f87171;
+                --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+                
+                /* RGB values for transparent backgrounds */
+                --background-primary-rgb: 15, 23, 42;
+                --background-secondary-rgb: 30, 41, 59;
+                --primary-color-rgb: 129, 140, 248;
+            }
         }
         
         /* Global style reset */
@@ -442,10 +473,8 @@ class UIStyleManager:
         .stApp button[title*="Collapse"] {display: none !important;}
         
         /* Additional selectors for sidebar collapse button */
-        .stApp > div:first-child button {display: none !important;}
-        .stApp > div:first-child > div:first-child button {display: none !important;}
-        .stApp [data-testid*="sidebar"] button {display: none !important;}
-        .stApp [data-testid*="Sidebar"] button {display: none !important;}
+        .stApp > div:first-child > div:first-child > button[aria-label*="collapse"] {display: none !important;}
+        .stApp > div:first-child > div:first-child > button[aria-label*="Collapse"] {display: none !important;}
         
         /* JavaScript to hide sidebar collapse button */
         </style>
@@ -458,17 +487,24 @@ class UIStyleManager:
                 'button[aria-label*="collapse"]',
                 'button[aria-label*="Collapse"]',
                 'button[title*="collapse"]',
-                'button[title*="Collapse"]',
-                '.stApp > div:first-child button',
-                '.stApp [data-testid*="sidebar"] button'
+                'button[title*="Collapse"]'
             ];
             
             selectors.forEach(selector => {
                 const elements = document.querySelectorAll(selector);
                 elements.forEach(el => {
                     if (el && el.style) {
-                        el.style.display = 'none !important';
-                        el.style.visibility = 'hidden !important';
+                        // Double check it's actually a collapse button
+                        const isCollapseButton = 
+                            el.getAttribute('aria-label')?.toLowerCase().includes('collapse') ||
+                            el.getAttribute('title')?.toLowerCase().includes('collapse') ||
+                            el.textContent?.toLowerCase().includes('collapse') ||
+                            el.className?.includes('stSidebarCollapseButton');
+                            
+                        if (isCollapseButton) {
+                            el.style.display = 'none !important';
+                            el.style.visibility = 'hidden !important';
+                        }
                     }
                 });
             });
@@ -477,8 +513,39 @@ class UIStyleManager:
         // Run immediately and on DOM changes
         hideSidebarCollapseButton();
         document.addEventListener('DOMContentLoaded', hideSidebarCollapseButton);
-        const observer = new MutationObserver(hideSidebarCollapseButton);
-        observer.observe(document.body, { childList: true, subtree: true });
+        
+        // More efficient observer - only watch for sidebar changes
+        const observer = new MutationObserver((mutations) => {
+            let shouldCheck = false;
+            mutations.forEach(mutation => {
+                if (mutation.type === 'childList') {
+                    // Only check if changes might affect sidebar
+                    const target = mutation.target;
+                    if (target.classList?.contains('stApp') || 
+                        target.querySelector?.('.stSidebar') ||
+                        Array.from(mutation.addedNodes).some(node => 
+                            node.nodeType === 1 && (
+                                node.classList?.contains('stSidebar') ||
+                                node.querySelector?.('.stSidebar')
+                            )
+                        )) {
+                        shouldCheck = true;
+                    }
+                }
+            });
+            if (shouldCheck) {
+                hideSidebarCollapseButton();
+            }
+        });
+        
+        // Start observing with more specific configuration
+        const appElement = document.querySelector('.stApp') || document.body;
+        observer.observe(appElement, { 
+            childList: true, 
+            subtree: true,
+            attributes: false,
+            characterData: false
+        });
         </script>
         <style>
         
@@ -491,7 +558,7 @@ class UIStyleManager:
         
         /* Top navigation bar styles */
         .top-navigation {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(var(--background-primary-rgb), 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
             padding: 1rem 2rem;
@@ -1121,9 +1188,9 @@ class UIComponentRenderer:
             <style>
             /* Override current page file uploader styles - top-bottom layered layout */
             div[data-testid="stFileUploader"] {
-                border: 2px dashed #cbd5e1 !important;
+                border: 2px dashed var(--border-color) !important;
                 border-radius: 1rem !important;
-                background: linear-gradient(135deg, #f1f5f9, #ffffff) !important;
+                background: linear-gradient(135deg, var(--background-secondary), var(--background-primary)) !important;
                 padding: 0 !important;
                 transition: all 0.3s ease !important;
                 min-height: 140px !important;
@@ -1134,10 +1201,10 @@ class UIComponentRenderer:
             }
             
             div[data-testid="stFileUploader"]:hover {
-                border-color: #6366f1 !important;
-                background: linear-gradient(135deg, #ffffff, rgba(99, 102, 241, 0.05)) !important;
+                border-color: var(--primary-color) !important;
+                background: linear-gradient(135deg, var(--background-primary), rgba(var(--primary-color-rgb), 0.05)) !important;
                 transform: translateY(-2px) !important;
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+                box-shadow: var(--shadow-lg) !important;
             }
             
             /* Top layer: Custom description area */
@@ -1176,24 +1243,24 @@ class UIComponentRenderer:
                 align-items: center !important;
                 justify-content: center !important;
                 text-align: center !important;
-                background: rgba(255, 255, 255, 0.9) !important;
-                border: 1px dashed #cbd5e1 !important;
+                background: rgba(var(--background-primary-rgb), 0.9) !important;
+                border: 1px dashed var(--border-color) !important;
                 border-radius: 0.5rem !important;
                 transition: all 0.3s ease !important;
                 padding: 1.25rem !important;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+                box-shadow: var(--shadow) !important;
             }
             
             div[data-testid="stFileUploaderDropzone"]:hover {
-                border-color: #6366f1 !important;
-                background: rgba(99, 102, 241, 0.08) !important;
+                border-color: var(--primary-color) !important;
+                background: rgba(var(--primary-color-rgb), 0.08) !important;
                 transform: translateY(-1px) !important;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08) !important;
+                box-shadow: var(--shadow) !important;
             }
             
             /* Optimize drag area text */
             div[data-testid="stFileUploaderDropzone"] span {
-                color: #64748b !important;
+                color: var(--text-muted) !important;
                 font-size: 0.875rem !important;
                 font-weight: 500 !important;
             }
