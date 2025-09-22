@@ -32,7 +32,7 @@
 </div>
 
 ## 📰 News
-
+- **2025.09.19** 🎉 Excited to announce that our paper [**RepoMaster**](https://arxiv.org/abs/2505.21577) has been accepted as a **NeurIPS 2025 Spotlight** (≈3.2%)!  
 - **2025.08.28** 🎉 We open-sourced [**RepoMaster**](https://github.com/QuantaAlpha/RepoMaster) — an AI agent that leverages GitHub repos to solve complex real-world tasks.
 - **2025.08.26** 🎉 We open-sourced [**GitTaskBench**](https://github.com/QuantaAlpha/GitTaskBench) — a repo-level benchmark & tooling suite for real-world tasks.
 - **2025.08.10** 🎉 We open-sourced [**SE-Agent**](https://github.com/JARVIS-Xs/SE-Agent) — a self-evolution trajectory framework for multi-step reasoning.
