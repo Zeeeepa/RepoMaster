@@ -118,6 +118,19 @@ JINA_API_KEY=your_jina_key              # Web content extraction
 # GEMINI_API_KEY=your_gemini_key        # Google Gemini support
 ```
 
+# ZAI (OpenAI-compatible proxy)
+# Option A (explicit provider)
+#   DEFAULT_API_PROVIDER=zai
+#   ZAI_API_KEY=your_zai_key
+#   ZAI_MODEL=glm-4.5            # or the model your proxy exposes
+#   ZAI_BASE_URL=https://<your-z-proxy>/v1
+# Or run with: python launcher.py --mode backend --backend-mode unified --api-type zai
+# Option B (no code changes, reuse openai path)
+#   OPENAI_API_KEY=your_zai_key
+#   OPENAI_MODEL=glm-4.5
+#   OPENAI_BASE_URL=https://<your-z-proxy>/v1
+
+
 💡 **Tip**: The `configs/env.example` file contains all available configuration options with detailed comments.
 
 ### Launch

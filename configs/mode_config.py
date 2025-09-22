@@ -238,7 +238,7 @@ def create_argument_parser() -> argparse.ArgumentParser:
     
     parser.add_argument(
         '--api-type', '-a',
-        choices=['basic', 'azure_openai', 'openai', 'claude', 'deepseek', 'basic_claude4', 'basic_deepseek_r1'],
+        choices=['basic', 'azure_openai', 'openai', 'claude', 'deepseek', 'zai', 'basic_claude4', 'basic_deepseek_r1'],
         default='basic',
         help='API type (default: basic)'
     )
