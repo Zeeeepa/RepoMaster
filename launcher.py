@@ -372,9 +372,18 @@ def run_repository_agent_mode(config_manager: ModeConfigManager):
 def run_unified_mode(config_manager: ModeConfigManager):
     """Run Unified Multi-Agent Interface (automatic agent orchestration and collaboration)"""
     
-    # Import RepoMaster agent and conversation manager
-    from src.core.agent_scheduler import RepoMasterAgent
-    from src.core.conversation_manager import ConversationManager, get_user_id_for_cli
+    # Import RepoMaster agent and conversation manager with error handling
+    try:
+        from src.core.agent_scheduler import RepoMasterAgent
+        from src.core.conversation_manager import ConversationManager, get_user_id_for_cli
+    except ImportError as e:
+        print(f"❌ Failed to import required modules: {e}")
+        print("💡 This might be due to missing dependencies. Try running:")
+        print("   python deploy.py --fix-deps")
+        print("   or")
+        print("   pip install PyMuPDF==1.23.26")
+        logging.error(f"Import error in unified mode: {e}")
+        return
     
     # Get configuration
     llm_config = config_manager.get_llm_config(config_manager.config.api_type)
