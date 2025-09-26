@@ -27,6 +27,19 @@ import asyncio
 import subprocess
 from pathlib import Path
 
+def safe_print(text):
+    """Print text with Unicode fallback for Windows encoding issues"""
+    try:
+        print(text)
+    except UnicodeEncodeError:
+        # Replace Unicode characters with ASCII equivalents
+        fallback_text = text.replace('⚠️', 'WARNING:').replace('📝', 'NOTE:').replace('💡', 'TIP:')
+        fallback_text = fallback_text.replace('🎯', 'TARGET:').replace('🌐', 'WEB:').replace('🤖', 'AI:')
+        fallback_text = fallback_text.replace('🔍', 'SEARCH:').replace('💻', 'CODE:').replace('📁', 'FOLDER:')
+        fallback_text = fallback_text.replace('❓', '?').replace('⚙️', 'CONFIG:').replace('🚪', 'EXIT:')
+        fallback_text = fallback_text.replace('🏥', 'HEALTH:').replace('✅', '[OK]').replace('❌', '[ERROR]')
+        print(fallback_text)
+
 
 from configs.mode_config import ModeConfigManager, create_argument_parser, print_config_info
 from src.frontend.terminal_show import (
@@ -64,11 +77,11 @@ def setup_environment():
     
     # If .env doesn't exist but env.example does, provide helpful guidance
     if not env_file.exists() and env_example_file.exists():
-        print("⚠️  Configuration file not found!")
-        print(f"📝 Please copy the example configuration file:")
+        safe_print("⚠️  Configuration file not found!")
+        safe_print(f"📝 Please copy the example configuration file:")
         print(f"   cp {env_example_file} {env_file}")
         print(f"   Then edit {env_file} with your API keys")
-        print("💡 See README.md or USAGE.md for detailed setup instructions")
+        safe_print("💡 See README.md or USAGE.md for detailed setup instructions")
         return False
     
     # Load environment variables if .env exists
@@ -84,15 +97,15 @@ def setup_environment():
                 missing_keys.append(key)
         
         if missing_keys:
-            print(f"⚠️  Missing required API keys in .env file: {', '.join(missing_keys)}")
-            print(f"📝 Please edit {env_file} and add the missing keys")
-            print("💡 See README.md or USAGE.md for API key setup instructions")
+            safe_print(f"⚠️  Missing required API keys in .env file: {', '.join(missing_keys)}")
+            safe_print(f"📝 Please edit {env_file} and add the missing keys")
+            safe_print("💡 See README.md or USAGE.md for API key setup instructions")
             return False
             
         return True
     
     # Fallback to system environment variables
-    print("⚠️  .env file not found, checking system environment variables...")
+    safe_print("⚠️  .env file not found, checking system environment variables...")
     missing_keys = []
     required_keys = ['SERPER_API_KEY', 'JINA_API_KEY']
     
@@ -101,15 +114,15 @@ def setup_environment():
             missing_keys.append(key)
     
     if missing_keys:
-        print(f"❌ Missing required environment variables: {', '.join(missing_keys)}")
+        safe_print(f"❌ Missing required environment variables: {', '.join(missing_keys)}")
         if env_example_file.exists():
-            print(f"📝 Please create configuration file:")
+            safe_print(f"📝 Please create configuration file:")
             print(f"   cp {env_example_file} {env_file}")
             print(f"   Then edit {env_file} with your API keys")
-        print("💡 See README.md or USAGE.md for setup instructions")
+        safe_print("💡 See README.md or USAGE.md for setup instructions")
         return False
         
-    print("✅ Using system environment variables")
+    safe_print("✅ Using system environment variables")
     return True
 
 def run_frontend_mode(config_manager: ModeConfigManager):
