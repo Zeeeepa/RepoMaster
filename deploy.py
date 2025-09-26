@@ -23,6 +23,21 @@ from typing import List, Dict, Optional, Tuple
 import json
 import time
 
+# Import encoding configuration
+try:
+    from src.utils.encoding_config import safe_print, configure_console_encoding
+    configure_console_encoding()
+except ImportError:
+    def safe_print(text=""):
+        if not text:
+            print()
+            return
+        try:
+            print(text)
+        except UnicodeEncodeError:
+            ascii_only = ''.join(char for char in text if ord(char) < 128)
+            print(ascii_only)
+
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
@@ -56,27 +71,27 @@ def print_banner():
 ╚══════════════════════════════════════════════════════════════════════════════╝
 {Colors.END}
 """
-    print(banner)
+    safe_print(banner)
 
 def print_step(step_num: int, total_steps: int, description: str):
     """Print step progress"""
-    print(f"\n{Colors.BLUE}[{step_num}/{total_steps}]{Colors.END} {Colors.BOLD}{description}{Colors.END}")
+    safe_print(f"\n{Colors.BLUE}[{step_num}/{total_steps}]{Colors.END} {Colors.BOLD}{description}{Colors.END}")
 
 def print_success(message: str):
     """Print success message"""
-    print(f"{Colors.GREEN}✅ {message}{Colors.END}")
+    safe_print(f"{Colors.GREEN}✅ {message}{Colors.END}")
 
 def print_warning(message: str):
     """Print warning message"""
-    print(f"{Colors.YELLOW}⚠️  {message}{Colors.END}")
+    safe_print(f"{Colors.YELLOW}⚠️  {message}{Colors.END}")
 
 def print_error(message: str):
     """Print error message"""
-    print(f"{Colors.RED}❌ {message}{Colors.END}")
+    safe_print(f"{Colors.RED}❌ {message}{Colors.END}")
 
 def print_info(message: str):
     """Print info message"""
-    print(f"{Colors.CYAN}ℹ️  {message}{Colors.END}")
+    safe_print(f"{Colors.CYAN}ℹ️  {message}{Colors.END}")
 
 class DeploymentManager:
     """Manages the complete deployment process"""
@@ -157,6 +172,16 @@ class DeploymentManager:
                 self.python_executable, "-m", "pip", "install", "-r", str(requirements_file)
             ], capture_output=False)
             
+            # Install package in development mode if setup.py exists
+            setup_file = self.project_root / "setup.py"
+            if setup_file.exists():
+                print_info("Installing package in development mode (pip install -e .)...")
+                self.run_command([
+                    self.python_executable, "-m", "pip", "install", "-e", "."
+                ], capture_output=False)
+                print_success("Package installed in development mode")
+                self.fixes_applied.append("Installed package in development mode")
+            
             print_success("Dependencies installed successfully")
             self.fixes_applied.append("Installed dependencies")
             return True
@@ -171,7 +196,7 @@ class DeploymentManager:
                 try:
                     # Uninstall and reinstall PyMuPDF with specific version
                     self.run_command([self.python_executable, "-m", "pip", "uninstall", "PyMuPDF", "-y"])
-                    self.run_command([self.python_executable, "-m", "pip", "install", "PyMuPDF==1.23.26"])
+                    self.run_command([self.python_executable, "-m", "pip", "install", "PyMuPDF>=1.24.0"])
                     print_success("Fixed PyMuPDF installation")
                     self.fixes_applied.append("Fixed PyMuPDF version conflict")
                     return True
@@ -340,32 +365,32 @@ class DeploymentManager:
         """Generate deployment report"""
         print_step(8, 8, "📋 Generating Deployment Report")
         
-        print(f"\n{Colors.BOLD}🎯 Deployment Summary{Colors.END}")
-        print("=" * 50)
+        safe_print(f"\n{Colors.BOLD}🎯 Deployment Summary{Colors.END}")
+        safe_print("=" * 50)
         
         if self.fixes_applied:
-            print(f"\n{Colors.GREEN}✅ Fixes Applied:{Colors.END}")
+            safe_print(f"\n{Colors.GREEN}✅ Fixes Applied:{Colors.END}")
             for fix in self.fixes_applied:
-                print(f"  • {fix}")
+                safe_print(f"  • {fix}")
         
         if self.issues_found:
-            print(f"\n{Colors.YELLOW}⚠️  Issues Found:{Colors.END}")
+            safe_print(f"\n{Colors.YELLOW}⚠️  Issues Found:{Colors.END}")
             for issue in self.issues_found:
-                print(f"  • {issue}")
+                safe_print(f"  • {issue}")
         
         # Overall status
         critical_issues = [issue for issue in self.issues_found if any(word in issue.lower() for word in ['critical', 'failed', 'missing critical'])]
         
         if not critical_issues:
-            print(f"\n{Colors.GREEN}{Colors.BOLD}🎉 Deployment Successful!{Colors.END}")
-            print(f"\n{Colors.CYAN}🚀 Ready to launch RepoMaster:{Colors.END}")
-            print(f"  • Frontend: python launcher.py --mode frontend")
-            print(f"  • Backend:  python launcher.py --mode backend --backend-mode unified")
-            print(f"  • Interactive: python start.py")
+            safe_print(f"\n{Colors.GREEN}{Colors.BOLD}🎉 Deployment Successful!{Colors.END}")
+            safe_print(f"\n{Colors.CYAN}🚀 Ready to launch RepoMaster:{Colors.END}")
+            safe_print(f"  • Frontend: python launcher.py --mode frontend")
+            safe_print(f"  • Backend:  python launcher.py --mode backend --backend-mode unified")
+            safe_print(f"  • Interactive: python start.py")
             return True
         else:
-            print(f"\n{Colors.RED}{Colors.BOLD}❌ Deployment has critical issues{Colors.END}")
-            print(f"\n{Colors.YELLOW}Please fix the issues above before running RepoMaster{Colors.END}")
+            safe_print(f"\n{Colors.RED}{Colors.BOLD}❌ Deployment has critical issues{Colors.END}")
+            safe_print(f"\n{Colors.YELLOW}Please fix the issues above before running RepoMaster{Colors.END}")
             return False
     
     def deploy(self) -> bool:

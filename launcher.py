@@ -27,18 +27,24 @@ import asyncio
 import subprocess
 from pathlib import Path
 
-def safe_print(text):
-    """Print text with Unicode fallback for Windows encoding issues"""
-    try:
-        print(text)
-    except UnicodeEncodeError:
-        # Replace Unicode characters with ASCII equivalents
-        fallback_text = text.replace('⚠️', 'WARNING:').replace('📝', 'NOTE:').replace('💡', 'TIP:')
-        fallback_text = fallback_text.replace('🎯', 'TARGET:').replace('🌐', 'WEB:').replace('🤖', 'AI:')
-        fallback_text = fallback_text.replace('🔍', 'SEARCH:').replace('💻', 'CODE:').replace('📁', 'FOLDER:')
-        fallback_text = fallback_text.replace('❓', '?').replace('⚙️', 'CONFIG:').replace('🚪', 'EXIT:')
-        fallback_text = fallback_text.replace('🏥', 'HEALTH:').replace('✅', '[OK]').replace('❌', '[ERROR]')
-        print(fallback_text)
+# Configure console encoding for Windows compatibility
+try:
+    from src.utils.encoding_config import safe_print, configure_console_encoding, is_utf8_available
+    # Configure console encoding at startup
+    configure_console_encoding()
+except ImportError:
+    # Fallback safe_print if encoding_config is not available
+    def safe_print(text):
+        """Fallback safe_print with basic ASCII conversion"""
+        if not text:
+            print()
+            return
+        try:
+            print(text)
+        except UnicodeEncodeError:
+            # Ultimate fallback: strip all non-ASCII characters
+            ascii_only = ''.join(char for char in text if ord(char) < 128)
+            print(ascii_only)
 
 
 from configs.mode_config import ModeConfigManager, create_argument_parser, print_config_info

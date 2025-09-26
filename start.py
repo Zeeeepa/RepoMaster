@@ -24,6 +24,25 @@ from pathlib import Path
 from typing import Optional, Dict, List
 import json
 
+# Configure console encoding for Windows compatibility
+try:
+    from src.utils.encoding_config import safe_print, configure_console_encoding, is_utf8_available
+    # Configure console encoding at startup
+    configure_console_encoding()
+except ImportError:
+    # Fallback safe_print if encoding_config is not available
+    def safe_print(text):
+        """Fallback safe_print with basic ASCII conversion"""
+        if not text:
+            print()
+            return
+        try:
+            print(text)
+        except UnicodeEncodeError:
+            # Ultimate fallback: strip all non-ASCII characters
+            ascii_only = ''.join(char for char in text if ord(char) < 128)
+            print(ascii_only)
+
 class Colors:
     """ANSI color codes for terminal output"""
     RED = '\033[91m'
@@ -50,23 +69,23 @@ def print_banner():
 ╚══════════════════════════════════════════════════════════════════════════════╝
 {Colors.END}
 """
-    print(banner)
+    safe_print(banner)
 
 def print_success(message: str):
     """Print success message"""
-    print(f"{Colors.GREEN}✅ {message}{Colors.END}")
+    safe_print(f"{Colors.GREEN}✅ {message}{Colors.END}")
 
 def print_warning(message: str):
     """Print warning message"""
-    print(f"{Colors.YELLOW}⚠️  {message}{Colors.END}")
+    safe_print(f"{Colors.YELLOW}⚠️  {message}{Colors.END}")
 
 def print_error(message: str):
     """Print error message"""
-    print(f"{Colors.RED}❌ {message}{Colors.END}")
+    safe_print(f"{Colors.RED}❌ {message}{Colors.END}")
 
 def print_info(message: str):
     """Print info message"""
-    print(f"{Colors.CYAN}ℹ️  {message}{Colors.END}")
+    safe_print(f"{Colors.CYAN}ℹ️  {message}{Colors.END}")
 
 class ServiceManager:
     """Manages RepoMaster services with health monitoring"""
@@ -154,17 +173,17 @@ class ServiceManager:
     
     def run_health_check(self) -> bool:
         """Run comprehensive health check"""
-        print(f"\n{Colors.BOLD}🏥 System Health Check{Colors.END}")
-        print("=" * 40)
+        safe_print(f"\n{Colors.BOLD}🏥 System Health Check{Colors.END}")
+        safe_print("=" * 40)
         
         health_status = self.check_system_health()
         
         all_healthy = all(health_status.values())
         
         if all_healthy:
-            print(f"\n{Colors.GREEN}{Colors.BOLD}✅ System is healthy and ready!{Colors.END}")
+            safe_print(f"\n{Colors.GREEN}{Colors.BOLD}✅ System is healthy and ready!{Colors.END}")
         else:
-            print(f"\n{Colors.YELLOW}{Colors.BOLD}⚠️  Some issues detected{Colors.END}")
+            safe_print(f"\n{Colors.YELLOW}{Colors.BOLD}⚠️  Some issues detected{Colors.END}")
             print_info("Run 'python deploy.py' to fix issues")
         
         return all_healthy
@@ -286,36 +305,36 @@ class ServiceManager:
     
     def show_interactive_menu(self):
         """Show interactive mode selection menu"""
-        print(f"\n{Colors.BOLD}🎯 Choose RepoMaster Mode{Colors.END}")
-        print("Select how you want to run RepoMaster:")
-        print()
-        print(f"{Colors.CYAN}0.{Colors.END} 🏥 Health Check")
-        print(f"   Check system health and dependencies")
-        print()
-        print(f"{Colors.CYAN}1.{Colors.END} 🌐 Web Interface (Streamlit)")
-        print(f"   Launch the web-based dashboard")
-        print()
-        print(f"{Colors.CYAN}2.{Colors.END} 🤖 Unified AI Assistant")
-        print(f"   Intelligent multi-agent orchestration")
-        print()
-        print(f"{Colors.CYAN}3.{Colors.END} 🔍 Deep Search Agent")
-        print(f"   Specialized repository search and analysis")
-        print()
-        print(f"{Colors.CYAN}4.{Colors.END} 💻 General Assistant")
-        print(f"   Programming and development assistance")
-        print()
-        print(f"{Colors.CYAN}5.{Colors.END} 📁 Repository Agent")
-        print(f"   Repository exploration and understanding")
-        print()
-        print(f"{Colors.CYAN}6.{Colors.END} ❓ Help")
-        print(f"   Show detailed help information")
-        print()
-        print(f"{Colors.CYAN}7.{Colors.END} ⚙️  Reconfigure")
-        print(f"   Run deployment setup again")
-        print()
-        print(f"{Colors.CYAN}8.{Colors.END} 🚪 Exit")
-        print(f"   Exit the launcher")
-        print()
+        safe_print(f"\n{Colors.BOLD}🎯 Choose RepoMaster Mode{Colors.END}")
+        safe_print("Select how you want to run RepoMaster:")
+        safe_print("")
+        safe_print(f"{Colors.CYAN}0.{Colors.END} 🏥 Health Check")
+        safe_print(f"   Check system health and dependencies")
+        safe_print("")
+        safe_print(f"{Colors.CYAN}1.{Colors.END} 🌐 Web Interface (Streamlit)")
+        safe_print(f"   Launch the web-based dashboard")
+        safe_print("")
+        safe_print(f"{Colors.CYAN}2.{Colors.END} 🤖 Unified AI Assistant")
+        safe_print(f"   Intelligent multi-agent orchestration")
+        safe_print("")
+        safe_print(f"{Colors.CYAN}3.{Colors.END} 🔍 Deep Search Agent")
+        safe_print(f"   Specialized repository search and analysis")
+        safe_print("")
+        safe_print(f"{Colors.CYAN}4.{Colors.END} 💻 General Assistant")
+        safe_print(f"   Programming and development assistance")
+        safe_print("")
+        safe_print(f"{Colors.CYAN}5.{Colors.END} 📁 Repository Agent")
+        safe_print(f"   Repository exploration and understanding")
+        safe_print("")
+        safe_print(f"{Colors.CYAN}6.{Colors.END} ❓ Help")
+        safe_print(f"   Show detailed help information")
+        safe_print("")
+        safe_print(f"{Colors.CYAN}7.{Colors.END} ⚙️  Reconfigure")
+        safe_print(f"   Run deployment setup again")
+        safe_print("")
+        safe_print(f"{Colors.CYAN}8.{Colors.END} 🚪 Exit")
+        safe_print(f"   Exit the launcher")
+        safe_print("")
     
     def handle_user_choice(self, choice: str) -> bool:
         """Handle user menu choice"""
@@ -325,7 +344,7 @@ class ServiceManager:
             return self.run_health_check()
         
         elif choice == '1':
-            print(f"\n{Colors.BLUE}🌐 Starting Web Interface...{Colors.END}")
+            safe_print(f"\n{Colors.BLUE}🌐 Starting Web Interface...{Colors.END}")
             if self.start_frontend():
                 print_info("Press Ctrl+C to stop the service")
                 try:
@@ -343,19 +362,19 @@ class ServiceManager:
             return True
         
         elif choice == '2':
-            print(f"\n{Colors.BLUE}🤖 Starting Unified AI Assistant...{Colors.END}")
+            safe_print(f"\n{Colors.BLUE}🤖 Starting Unified AI Assistant...{Colors.END}")
             return self.start_backend("unified")
         
         elif choice == '3':
-            print(f"\n{Colors.BLUE}🔍 Starting Deep Search Agent...{Colors.END}")
+            safe_print(f"\n{Colors.BLUE}🔍 Starting Deep Search Agent...{Colors.END}")
             return self.start_backend("deepsearch")
         
         elif choice == '4':
-            print(f"\n{Colors.BLUE}💻 Starting General Assistant...{Colors.END}")
+            safe_print(f"\n{Colors.BLUE}💻 Starting General Assistant...{Colors.END}")
             return self.start_backend("general_assistant")
         
         elif choice == '5':
-            print(f"\n{Colors.BLUE}📁 Starting Repository Agent...{Colors.END}")
+            safe_print(f"\n{Colors.BLUE}📁 Starting Repository Agent...{Colors.END}")
             return self.start_backend("repository_agent")
         
         elif choice == '6':
@@ -363,7 +382,7 @@ class ServiceManager:
             return True
         
         elif choice == '7':
-            print(f"\n{Colors.BLUE}⚙️  Running deployment setup...{Colors.END}")
+            safe_print(f"\n{Colors.BLUE}⚙️  Running deployment setup...{Colors.END}")
             try:
                 subprocess.run([self.python_executable, "deploy.py"], cwd=self.project_root)
             except Exception as e:
@@ -417,7 +436,7 @@ class ServiceManager:
   • Modify .streamlit/config.toml for UI settings
   • Check configs/mode_config.py for advanced options
 """
-        print(help_text)
+        safe_print(help_text)
     
     def run_interactive(self):
         """Run interactive mode"""
@@ -429,7 +448,7 @@ class ServiceManager:
         
         if not all(health_status.values()):
             print_warning("Some issues detected. Consider running deployment setup.")
-            print()
+            safe_print("")
         
         while True:
             try:

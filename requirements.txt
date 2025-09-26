@@ -29,7 +29,7 @@ langchain
 langchain-community
 
 # pdf processing (optional)
-PyMuPDF==1.23.26
+PyMuPDF>=1.24.0
 pdf2image~=1.17.0
 # gradio>=4.44.0,<5.0.0  # Conflicts with Pillow requirements
 
