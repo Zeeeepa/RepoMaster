@@ -404,7 +404,7 @@ def print_optimized_startup_sequence(env_status: dict, api_status: dict, config)
     print()
     
     # Step 2: Initialization steps
-    print("\033[36m🔄 Initializing...\033[0m")
+    safe_print("\033[36m🔄 Initializing...\033[0m")
     print()
     
     # Step 1: Environment Setup
