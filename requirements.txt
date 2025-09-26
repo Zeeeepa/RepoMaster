@@ -13,11 +13,11 @@ streamlit_extras~=0.4.0
 # environment and web
 python-dotenv~=1.0.1
 beautifulsoup4~=4.12.3
-pillow>=11.0.0
+pillow>=10.0.0,<11.0.0
 
-# autogen (using compatible versions)
-autogen-agentchat>=0.6.1,<0.7.0
-autogen-core>=0.6.1,<0.7.0
+# autogen (simplified - remove conflicting packages)
+# autogen-agentchat>=0.6.1,<0.7.0
+# autogen-core>=0.6.1,<0.7.0
 pyautogen>=0.7.6,<0.8.0
 
 # search engines
@@ -31,7 +31,7 @@ langchain-community
 # pdf processing (optional)
 PyMuPDF==1.23.26
 pdf2image~=1.17.0
-gradio>=4.44.0,<5.0.0
+# gradio>=4.44.0,<5.0.0  # Conflicts with Pillow requirements
 
 # visualization
 plotly
