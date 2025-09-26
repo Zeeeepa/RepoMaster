@@ -2,8 +2,11 @@ import os
 import warnings
 
 # Default provider priority order
+# --- Codegen: add ZAI to provider priority (OpenAI-compatible via base_url) ---
+
 DEFAULT_PROVIDER_PRIORITY = [
     'openai',
+    'zai',
     'claude', 
     'deepseek',
     'basic',
@@ -24,6 +27,13 @@ def get_api_config():
                 "model": os.environ.get("ANTHROPIC_MODEL", "claude-3-5-sonnet-20241022"),
                 "api_key": os.environ.get("ANTHROPIC_API_KEY"),
                 "base_url": os.environ.get("ANTHROPIC_BASE_URL")
+            }]
+        },
+        'zai': {
+            "config_list": [{
+                "model": os.environ.get("ZAI_MODEL", os.environ.get("OPENAI_MODEL", "glm-4.5")),
+                "api_key": os.environ.get("ZAI_API_KEY"),
+                "base_url": os.environ.get("ZAI_BASE_URL")
             }]
         },
         'deepseek': {
@@ -210,4 +220,4 @@ def get_llm_config(api_type: str = None, timeout: int = 240, temperature: float 
 def load_envs_func():
     pwd = os.getcwd()
     from dotenv import load_dotenv
-    load_dotenv(os.path.join(pwd, "configs", ".env"))    
+    load_dotenv(os.path.join(pwd, "configs", ".env"))
