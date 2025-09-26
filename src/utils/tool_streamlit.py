@@ -11,8 +11,7 @@ try:
     import fitz  # PyMuPDF for PDF handling
     PDF_SUPPORT = True
 except ImportError as e:
-    print(f"Warning: PDF processing disabled due to import error: {e}")
-    print("Install PyMuPDF with: pip install PyMuPDF==1.23.26")
+    # Silently disable PDF support - don't print warnings during import
     PDF_SUPPORT = False
     fitz = None
 

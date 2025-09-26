@@ -7,14 +7,22 @@ import traceback
 import pandas as pd
 import datetime
 from pathlib import Path
-from autogen import AssistantAgent, UserProxyAgent, GroupChatManager
-from autogen.oai.client import OpenAIWrapper
-from autogen.agentchat.conversable_agent import ConversableAgent as Agent
+try:
+    from autogen import AssistantAgent, UserProxyAgent, GroupChatManager
+    from autogen.oai.client import OpenAIWrapper
+    from autogen.agentchat.conversable_agent import ConversableAgent as Agent
+except ImportError:
+    # Use compatibility layer for Python 3.13
+    from src.utils.autogen_compat import AssistantAgent, UserProxyAgent, GroupChatManager, OpenAIWrapper, Agent
 from typing import Union, Dict, Callable, Any, TypeVar, List, Tuple
 
 from src.services.autogen_upgrade.file_monitor import get_directory_files, compare_and_display_new_files
 
-from autogen.formatting_utils import colored
+try:
+    from autogen.formatting_utils import colored
+except ImportError:
+    # Use compatibility layer for Python 3.13
+    from src.utils.autogen_compat import colored
 
 from bs4 import BeautifulSoup
 from PIL import Image, ImageDraw, ImageFont
