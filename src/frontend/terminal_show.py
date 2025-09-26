@@ -411,10 +411,10 @@ def print_optimized_startup_sequence(env_status: dict, api_status: dict, config)
     if env_status['success']:
         env_file = env_status.get('file', 'system environment')
         step1_msg = f"[1/4] 📁 Environment Setup... ✅ Loaded from {env_file}"
-        print("\033[32m" + step1_msg + "\033[0m")
+        safe_print("\033[32m" + step1_msg + "\033[0m")
     else:
         step1_msg = "[1/4] 📁 Environment Setup... ❌ Failed to load .env"
-        print("\033[31m" + step1_msg + "\033[0m")
+        safe_print("\033[31m" + step1_msg + "\033[0m")
     
     time.sleep(0.3)
     
@@ -424,10 +424,10 @@ def print_optimized_startup_sequence(env_status: dict, api_status: dict, config)
         model = api_status.get('model', '')
         model_info = f" {model}" if model and model != 'N/A' else ""
         step2_msg = f"[2/4] 🔑 API Configuration... ✅ {provider}{model_info}"
-        print("\033[32m" + step2_msg + "\033[0m")
+        safe_print("\033[32m" + step2_msg + "\033[0m")
     else:
         step2_msg = "[2/4] 🔑 API Configuration... ❌ API keys not configured"
-        print("\033[31m" + step2_msg + "\033[0m")
+        safe_print("\033[31m" + step2_msg + "\033[0m")
     
     time.sleep(0.3)
     
@@ -452,13 +452,13 @@ def print_optimized_startup_sequence(env_status: dict, api_status: dict, config)
         work_dir_short = "..." + work_dir_short[-27:]
     
     step3_msg = f"[3/4] ⚙️  Service Configuration... ✅ {mode_desc}{backend_desc}, Work: {work_dir_short}"
-    print("\033[32m" + step3_msg + "\033[0m")
+    safe_print("\033[32m" + step3_msg + "\033[0m")
     
     time.sleep(0.3)
     
     # Step 4: Service Launch
     step4_msg = "[4/4] 🚀 Service Launch... ✅ Ready!"
-    print("\033[32m" + step4_msg + "\033[0m")
+    safe_print("\033[32m" + step4_msg + "\033[0m")
     
     time.sleep(0.2)
     print()
