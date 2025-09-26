@@ -1,6 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+def safe_print(text):
+    """Print text with Unicode fallback for Windows encoding issues"""
+    try:
+        print(text)
+    except UnicodeEncodeError:
+        # Replace Unicode characters with ASCII equivalents
+        fallback_text = text.replace("⚠️", "WARNING:").replace("📝", "NOTE:").replace("💡", "TIP:")
+        fallback_text = fallback_text.replace("🎯", "TARGET:").replace("🌐", "WEB:").replace("🤖", "AI:")
+        fallback_text = fallback_text.replace("🔍", "SEARCH:").replace("💻", "CODE:").replace("📁", "FOLDER:")
+        fallback_text = fallback_text.replace("❓", "?").replace("⚙️", "CONFIG:").replace("🚪", "EXIT:")
+        fallback_text = fallback_text.replace("🏥", "HEALTH:").replace("✅", "[OK]").replace("❌", "[ERROR]")
+        fallback_text = fallback_text.replace("🔄", "REFRESH:").replace("ℹ️", "INFO:").replace("⭐", "*")
+        # Replace box drawing characters with ASCII equivalents
+        fallback_text = fallback_text.replace("║", "|").replace("═", "=").replace("╔", "+").replace("╗", "+")
+        fallback_text = fallback_text.replace("╚", "+").replace("╝", "+").replace("╠", "+").replace("╣", "+")
+        fallback_text = fallback_text.replace("╦", "+").replace("╩", "+").replace("╬", "+")
+        # Replace other Unicode characters
+        fallback_text = fallback_text.replace("█", "#").replace("▄", "_").replace("▀", "^")
+        fallback_text = fallback_text.replace("│", "|").replace("─", "-").replace("┌", "+").replace("┐", "+")
+        fallback_text = fallback_text.replace("└", "+").replace("┘", "+").replace("├", "+").replace("┤", "+")
+        fallback_text = fallback_text.replace("┬", "+").replace("┴", "+").replace("┼", "+")
+        print(fallback_text)
+
+
 
 def print_repomaster_title():
 
@@ -132,7 +156,10 @@ def print_repomaster_cli():
     print("\033[36m" + repomaster_logo + "\033[0m")  # Cyan color for logo
     print("\033[33m" + subtitle.center(88) + "\033[0m")  # Yellow for subtitle
     # print("\033[90m" + version_info.center(88) + "\033[0m")  # Gray for version
-    print("\033[32m" + quick_start + "\033[0m")  # Green for quick start
+    try:
+        print("\033[32m" + quick_start + "\033[0m")
+    except UnicodeEncodeError:
+        print("Quick Start Guide (ASCII fallback)")  # Green for quick start
     return
     print()
     print("\033[34m" + performance + "\033[0m")  # Blue for performance
@@ -370,7 +397,10 @@ def print_optimized_startup_sequence(env_status: dict, api_status: dict, config)
 ║      bash run.sh backend unified    # Run unified assistant                       ║
 ║                                                                                    ║
 ╚════════════════════════════════════════════════════════════════════════════════════╝"""
-    print("\033[32m" + quick_start + "\033[0m")
+    try:
+        print("\033[32m" + quick_start + "\033[0m")
+    except UnicodeEncodeError:
+        print("Quick Start Guide (ASCII fallback)")
     print()
     
     # Step 2: Initialization steps
