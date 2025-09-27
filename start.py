@@ -210,7 +210,9 @@ class ServiceManager:
                 cwd=self.project_root,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True
+                text=True,
+                encoding='utf-8',
+                errors='ignore'  # Ignore encoding errors on Windows
             )
             
             self.running_processes['frontend'] = {
@@ -250,7 +252,9 @@ class ServiceManager:
                 cwd=self.project_root,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True
+                text=True,
+                encoding='utf-8',
+                errors='ignore'  # Ignore encoding errors on Windows
             )
             
             self.running_processes['backend'] = {
@@ -359,6 +363,15 @@ class ServiceManager:
                     pass
                 finally:
                     self.stop_all_services()
+            else:
+                # Fallback: Direct launch without subprocess
+                print_info("Trying direct launch...")
+                try:
+                    import os
+                    os.system(f"{self.python_executable} launcher.py --mode frontend")
+                except Exception as e:
+                    print_error(f"Direct launch failed: {e}")
+                    print_info("Try running manually: python launcher.py --mode frontend")
             return True
         
         elif choice == '2':
