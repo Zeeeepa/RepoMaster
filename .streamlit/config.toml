@@ -2,6 +2,14 @@
 hideTopBar = true
 
 [server]
+# showErrorDetails is deprecated, use client.showErrorDetails instead
+# showErrorDetails = false
+port = 8501
+address = "localhost"
+fileWatcherType = "none"
+maxUploadSize = 200
+
+[client]
 showErrorDetails = false
 
 [browser]

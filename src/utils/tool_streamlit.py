@@ -4,8 +4,16 @@ import pandas as pd
 import plotly.express as px
 
 import io
-import fitz  # PyMuPDF for PDF handling
 import base64
+
+# Optional PDF handling with fallback
+try:
+    import fitz  # PyMuPDF for PDF handling
+    PDF_SUPPORT = True
+except ImportError as e:
+    # Silently disable PDF support - don't print warnings during import
+    PDF_SUPPORT = False
+    fitz = None
 
 from PIL import Image
 
@@ -83,6 +91,8 @@ def generate_thumbnail(file_path):
             img.save(buffered, format="PNG")
             return base64.b64encode(buffered.getvalue()).decode()
     elif file_type == 'pdf':
+        if not PDF_SUPPORT:
+            return generate_default_thumbnail()
         try:
             doc = fitz.open(file_path)
             pix = doc[0].get_pixmap(matrix=fitz.Matrix(100/72, 100/72))
@@ -131,6 +141,9 @@ def display_file_content(file_path):
             content = file.read()
             st.text_area("File Content", content, height=300)
     elif file_type == 'pdf':
+        if not PDF_SUPPORT:
+            st.error("PDF viewing is not available. Install PyMuPDF with: pip install PyMuPDF==1.23.26")
+            return
         with fitz.open(file_path) as doc:
             for page in doc:
                 pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
@@ -264,14 +277,17 @@ def get_file_preview_content(file_path):
             'type': 'pdf',
             'pages': []
         }
-        with fitz.open(file_path) as doc:
-            for page in doc:
-                pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
-                img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-                buffered = io.BytesIO()
-                img.save(buffered, format="PNG")
-                img_str = base64.b64encode(buffered.getvalue()).decode()
-                content['pages'].append(img_str)
+        if not PDF_SUPPORT:
+            content['error'] = "PDF processing not available. Install PyMuPDF with: pip install PyMuPDF==1.23.26"
+        else:
+            with fitz.open(file_path) as doc:
+                for page in doc:
+                    pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
+                    img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+                    buffered = io.BytesIO()
+                    img.save(buffered, format="PNG")
+                    img_str = base64.b64encode(buffered.getvalue()).decode()
+                    content['pages'].append(img_str)
     elif file_type == 'image':
         with open(file_path, "rb") as image_file:
             content = {

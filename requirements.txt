@@ -6,18 +6,19 @@ typing_extensions
 requests~=2.32.3
 tiktoken~=0.7.0
 
-# streamlit related
-streamlit
-streamlit_extras
+# streamlit related (using newer version that supports Pillow 11+)
+streamlit>=1.50.0,<2.0.0
+streamlit_extras~=0.4.0
 
 # environment and web
 python-dotenv~=1.0.1
 beautifulsoup4~=4.12.3
-pillow
+pillow>=10.0.0,<11.0.0
 
-autogen-agentchat~=0.6.1
-autogen-core~=0.6.1
-pyautogen~=0.7.6
+# autogen (simplified - remove conflicting packages)
+# autogen-agentchat>=0.6.1,<0.7.0
+# autogen-core>=0.6.1,<0.7.0
+pyautogen>=0.7.6,<0.8.0
 
 # search engines
 serpapi~=0.1.5
@@ -27,10 +28,10 @@ search-engine-parser
 langchain
 langchain-community
 
-# pdf processing
-PyMuPDF
-pdf2image
-gradio
+# pdf processing (optional)
+PyMuPDF>=1.24.0
+pdf2image~=1.17.0
+# gradio>=4.44.0,<5.0.0  # Conflicts with Pillow requirements
 
 # visualization
 plotly

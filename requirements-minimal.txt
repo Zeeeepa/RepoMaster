@@ -1,0 +1,25 @@
+# Minimal requirements for RepoMaster - Python 3.13 compatible
+# Core data handling
+pandas>=2.2.2
+requests>=2.32.3
+python-dotenv>=1.0.1
+
+# Web framework
+streamlit>=1.50.0,<2.0.0
+
+# Basic utilities
+tqdm
+humanize
+joblib
+
+# OpenAI client
+openai>=1.68.0
+
+# Optional: PDF processing (skip if compilation fails)
+# PyMuPDF>=1.24.0
+
+# Optional: Advanced features (skip if compilation fails)  
+# tiktoken>=0.7.0
+# aiohttp>=3.8.0
+# lxml
+# pyautogen>=0.7.6
