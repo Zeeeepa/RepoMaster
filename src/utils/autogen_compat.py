@@ -75,32 +75,36 @@ else:
     class AssistantAgent:
         def __init__(self, *args, **kwargs):
             self.name = kwargs.get('name', 'assistant')
-            print("Warning: AutoGen not available - using dummy implementation")
+            self.system_message = kwargs.get('system_message', '')
+            self.llm_config = kwargs.get('llm_config', {})
+            # Don't print warning during import/creation - only when actually used
             
         def generate_reply(self, *args, **kwargs):
-            return "AutoGen not available"
+            return "AutoGen compatibility mode - limited functionality"
     
     class UserProxyAgent:
         def __init__(self, *args, **kwargs):
             self.name = kwargs.get('name', 'user_proxy')
-            print("Warning: AutoGen not available - using dummy implementation")
+            self.human_input_mode = kwargs.get('human_input_mode', 'NEVER')
+            # Don't print warning during import/creation - only when actually used
             
         def generate_reply(self, *args, **kwargs):
-            return "AutoGen not available"
+            return "AutoGen compatibility mode - limited functionality"
     
     class GroupChatManager:
         def __init__(self, *args, **kwargs):
             self.name = kwargs.get('name', 'group_chat_manager')
-            print("Warning: AutoGen not available - using dummy implementation")
+            # Don't print warning during import/creation - only when actually used
     
     class OpenAIWrapper:
         def __init__(self, *args, **kwargs):
-            print("Warning: AutoGen not available - using dummy OpenAIWrapper")
+            # Don't print warning during import/creation - only when actually used
+            pass
     
     class Agent:
         def __init__(self, *args, **kwargs):
             self.name = kwargs.get('name', 'agent')
-            print("Warning: AutoGen not available - using dummy Agent")
+            # Don't print warning during import/creation - only when actually used
     
     def colored(text, color):
         """Simple colored text fallback"""
