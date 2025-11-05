@@ -75,18 +75,19 @@ def setup_environment():
     if env_file.exists():
         load_dotenv(env_file, override=True)
         
-        # Check for required API keys
+        # Check for required API keys (only check for primary LLM API key)
         missing_keys = []
-        required_keys = ['SERPER_API_KEY', 'JINA_API_KEY']
+        required_keys = ['OPENAI_API_KEY']  # Only require the main LLM API key
         
         for key in required_keys:
-            if not os.environ.get(key):
+            if not os.environ.get(key) or os.environ.get(key) == 'your_zai_api_key_here':
                 missing_keys.append(key)
         
         if missing_keys:
             print(f"⚠️  Missing required API keys in .env file: {', '.join(missing_keys)}")
-            print(f"📝 Please edit {env_file} and add the missing keys")
-            print("💡 See README.md or USAGE.md for API key setup instructions")
+            print(f"📝 Please edit {env_file} and add your Z.ai API key")
+            print("💡 Get your Z.ai API key from: https://z.ai/model-api")
+            print("💡 SERPER_API_KEY and JINA_API_KEY are optional for enhanced functionality")
             return False
             
         return True
@@ -94,7 +95,7 @@ def setup_environment():
     # Fallback to system environment variables
     print("⚠️  .env file not found, checking system environment variables...")
     missing_keys = []
-    required_keys = ['SERPER_API_KEY', 'JINA_API_KEY']
+    required_keys = ['OPENAI_API_KEY']  # Only require the main LLM API key
     
     for key in required_keys:
         if not os.environ.get(key):
@@ -105,8 +106,9 @@ def setup_environment():
         if env_example_file.exists():
             print(f"📝 Please create configuration file:")
             print(f"   cp {env_example_file} {env_file}")
-            print(f"   Then edit {env_file} with your API keys")
-        print("💡 See README.md or USAGE.md for setup instructions")
+            print(f"   Then edit {env_file} with your Z.ai API key")
+        print("💡 Get your Z.ai API key from: https://z.ai/model-api")
+        print("💡 SERPER_API_KEY and JINA_API_KEY are optional for enhanced functionality")
         return False
         
     print("✅ Using system environment variables")
