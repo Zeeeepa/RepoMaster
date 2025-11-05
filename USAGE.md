@@ -63,6 +63,24 @@ SERPER_API_KEY=your_serper_key          # For Google search results - Get API ke
 JINA_API_KEY=your_jina_key              # For web content extraction - Get API key at: https://jina.ai/
 ```
 
+#### ZAI (OpenAI-compatible) quick setup
+Option A: use dedicated provider
+```bash
+DEFAULT_API_PROVIDER=zai
+ZAI_API_KEY=your_zai_key
+ZAI_MODEL=glm-4.5             # adjust to your proxy’s model id
+ZAI_BASE_URL=https://<your-z-proxy>/v1
+# Or select at runtime:
+python launcher.py --mode backend --backend-mode unified --api-type zai
+```
+Option B: reuse OpenAI path (no code changes)
+```bash
+OPENAI_API_KEY=your_zai_key
+OPENAI_MODEL=glm-4.5
+OPENAI_BASE_URL=https://<your-z-proxy>/v1
+```
+
+
 💡 **Note**: The `configs/env.example` file contains the complete configuration template with all available options and detailed comments.
 
 ---
