@@ -27,6 +27,25 @@ import asyncio
 import subprocess
 from pathlib import Path
 
+# Configure console encoding for Windows compatibility
+try:
+    from src.utils.encoding_config import safe_print, configure_console_encoding, is_utf8_available
+    # Configure console encoding at startup
+    configure_console_encoding()
+except ImportError:
+    # Fallback safe_print if encoding_config is not available
+    def safe_print(text):
+        """Fallback safe_print with basic ASCII conversion"""
+        if not text:
+            print()
+            return
+        try:
+            print(text)
+        except UnicodeEncodeError:
+            # Ultimate fallback: strip all non-ASCII characters
+            ascii_only = ''.join(char for char in text if ord(char) < 128)
+            print(ascii_only)
+
 
 from configs.mode_config import ModeConfigManager, create_argument_parser, print_config_info
 from src.frontend.terminal_show import (
@@ -64,11 +83,11 @@ def setup_environment():
     
     # If .env doesn't exist but env.example does, provide helpful guidance
     if not env_file.exists() and env_example_file.exists():
-        print("⚠️  Configuration file not found!")
-        print(f"📝 Please copy the example configuration file:")
+        safe_print("⚠️  Configuration file not found!")
+        safe_print(f"📝 Please copy the example configuration file:")
         print(f"   cp {env_example_file} {env_file}")
         print(f"   Then edit {env_file} with your API keys")
-        print("💡 See README.md or USAGE.md for detailed setup instructions")
+        safe_print("💡 See README.md or USAGE.md for detailed setup instructions")
         return False
     
     # Load environment variables if .env exists
@@ -84,15 +103,15 @@ def setup_environment():
                 missing_keys.append(key)
         
         if missing_keys:
-            print(f"⚠️  Missing required API keys in .env file: {', '.join(missing_keys)}")
-            print(f"📝 Please edit {env_file} and add the missing keys")
-            print("💡 See README.md or USAGE.md for API key setup instructions")
+            safe_print(f"⚠️  Missing required API keys in .env file: {', '.join(missing_keys)}")
+            safe_print(f"📝 Please edit {env_file} and add the missing keys")
+            safe_print("💡 See README.md or USAGE.md for API key setup instructions")
             return False
             
         return True
     
     # Fallback to system environment variables
-    print("⚠️  .env file not found, checking system environment variables...")
+    safe_print("⚠️  .env file not found, checking system environment variables...")
     missing_keys = []
     required_keys = ['SERPER_API_KEY', 'JINA_API_KEY']
     
@@ -101,15 +120,15 @@ def setup_environment():
             missing_keys.append(key)
     
     if missing_keys:
-        print(f"❌ Missing required environment variables: {', '.join(missing_keys)}")
+        safe_print(f"❌ Missing required environment variables: {', '.join(missing_keys)}")
         if env_example_file.exists():
-            print(f"📝 Please create configuration file:")
+            safe_print(f"📝 Please create configuration file:")
             print(f"   cp {env_example_file} {env_file}")
             print(f"   Then edit {env_file} with your API keys")
-        print("💡 See README.md or USAGE.md for setup instructions")
+        safe_print("💡 See README.md or USAGE.md for setup instructions")
         return False
         
-    print("✅ Using system environment variables")
+    safe_print("✅ Using system environment variables")
     return True
 
 def run_frontend_mode(config_manager: ModeConfigManager):
@@ -372,9 +391,18 @@ def run_repository_agent_mode(config_manager: ModeConfigManager):
 def run_unified_mode(config_manager: ModeConfigManager):
     """Run Unified Multi-Agent Interface (automatic agent orchestration and collaboration)"""
     
-    # Import RepoMaster agent and conversation manager
-    from src.core.agent_scheduler import RepoMasterAgent
-    from src.core.conversation_manager import ConversationManager, get_user_id_for_cli
+    # Import RepoMaster agent and conversation manager with error handling
+    try:
+        from src.core.agent_scheduler import RepoMasterAgent
+        from src.core.conversation_manager import ConversationManager, get_user_id_for_cli
+    except ImportError as e:
+        print(f"❌ Failed to import required modules: {e}")
+        print("💡 This might be due to missing dependencies. Try running:")
+        print("   python deploy.py --fix-deps")
+        print("   or")
+        print("   pip install PyMuPDF==1.23.26")
+        logging.error(f"Import error in unified mode: {e}")
+        return
     
     # Get configuration
     llm_config = config_manager.get_llm_config(config_manager.config.api_type)

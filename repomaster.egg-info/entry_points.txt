@@ -1,0 +1,4 @@
+[console_scripts]
+repomaster = launcher:main
+repomaster-deploy = deploy:main
+repomaster-start = start:main
